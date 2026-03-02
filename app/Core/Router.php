@@ -11,11 +11,11 @@ class Router {
     }
 
     public function run(): void {
-        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';   
-        $uri = parse_url(
-            $_SERVER['REQUEST_URI'] ?? '/', 
-            PHP_URL_PATH
-        );
+
+        $request = new Request();
+
+        $method = $request->method();   
+        $uri = $request->uri();
 
         $action = $this->routes[$method][$uri] ?? null;
 
@@ -28,6 +28,6 @@ class Router {
         [$controller, $method] = $action;
         $controller = new $controller;
 
-        call_user_func([$controller, $method]);
+        call_user_func([$controller, $method], $request);
     }
 }
