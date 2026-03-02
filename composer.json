@@ -1,0 +1,9 @@
+{
+    "name": "littlesekii/php-mvc-framework",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {}
+}
