@@ -13,6 +13,7 @@ class Router {
     public function run(): void {
 
         $request = new Request();
+        $response = new Response();
 
         $method = $request->method();   
         $uri = $request->uri();
@@ -20,14 +21,20 @@ class Router {
         $action = $this->routes[$method][$uri] ?? null;
 
         if (!$action) {
-            http_response_code(404);
-            echo '404 Not Found';
+            $response->setStatusCode(404)
+                ->setContent("404 Not Found")
+                ->send();
+
             return;
         }
 
         [$controller, $method] = $action;
         $controller = new $controller;
 
-        call_user_func([$controller, $method], $request);
+        $result = call_user_func([$controller, $method], $request, $response);
+
+        if ($result instanceof Response) {
+            $result->send();
+        }
     }
 }
