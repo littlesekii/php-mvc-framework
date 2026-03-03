@@ -2,27 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
-use App\Core\View;
 
-class MainController {
+class MainController extends Controller {
 
-    public function index(Request $req, Response $res): Response {
-        $content = View::render('home.sindex', [
-            'name' => 'PHP MVC Framework'
-        ]);
-        return $res->setContent($content);
+    public function index(Request $req): Response {
+        return $this->view('home.index', ['name' => 'PHP MVC Framework']);
     }
 
-    public function requestInfo(Request $req, Response $res): Response {
-        return $res->json([
+    public function requestInfo(Request $req): Response {
+        return $this->json([
             'method: ' => $req->method(),
             'uri' => $req->uri()
         ]);
     }
 
-    public function ping(Request $req, Response $res): Response {
-        return $res->setContent('Pong 🏓');
+    public function ping(Request $req): Response {
+        return (new Response())->setContent('Pong 🏓');
     }
 }
