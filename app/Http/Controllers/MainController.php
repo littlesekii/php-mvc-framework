@@ -8,7 +8,7 @@ use App\Core\Response;
 
 class MainController extends Controller {
 
-    public function index(Request $req): Response {
+    public function index(): Response {
         return $this->view('home.index', ['name' => 'PHP MVC Framework']);
     }
 
@@ -19,11 +19,11 @@ class MainController extends Controller {
         ]);
     }
 
-    public function ping(Request $req): Response {
+    public function ping(): Response {
         return (new Response())->setContent('Pong 🏓');
     }
 
-    public function user(Request $req, $id): Response {
+    public function user(int $id): Response {
         return (new Response())->setContent(strval($id));
     }
 }

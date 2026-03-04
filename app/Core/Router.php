@@ -2,6 +2,9 @@
 
 namespace App\Core;
 
+use Exception;
+use ReflectionMethod;
+
 class Router {
 
     private array $staticRoutes = [];
@@ -47,7 +50,33 @@ class Router {
         [$controller, $method] = $action;
         $controller = new $controller;
 
-        $response = call_user_func_array([$controller, $method], array_merge([$request], $params));
+        $reflection = new ReflectionMethod($controller, $method);
+        $args = [];
+
+        foreach ($reflection->getParameters() as $param) {
+            $paramType = $param->getType();
+            if ($paramType && $paramType->getName() === Request::class) {
+                $args[] = $request;
+                continue;
+            }
+
+            $paramName = $param->getName();
+            if (isset($params[$paramName])) {
+                $args[] = $params[$paramName];
+                continue;
+            }
+            if ($param->isDefaultValueAvailable()) {
+                $args[] = $param->getDefaultValue();
+                continue;
+            }
+
+            throw new Exception("Cannot resolve parameter {$paramName}");
+        }
+
+        $response = $reflection->invokeArgs(
+            $controller, 
+            $args
+        );
 
         if ($response instanceof Response) {
             $response->send();
@@ -72,7 +101,7 @@ class Router {
         foreach ($routes as $route) {        
             if (preg_match($route['pattern'], $uri, $matches)) {
                 $paramValues = array_slice($matches, 1);
-                $params = array_combine($route['paramNames'], $paramValues);
+                $params = array_combine($route['paramNames'], $paramValues) ?: [];
 
                 $this->resolveDynamicRoute($request, $route['action'], $params);
                 return;
