@@ -22,4 +22,8 @@ class MainController extends Controller {
     public function ping(Request $req): Response {
         return (new Response())->setContent('Pong 🏓');
     }
+
+    public function user(Request $req, $id): Response {
+        return (new Response())->setContent(strval($id));
+    }
 }
