@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Core\Controller;
 use App\Core\Response;
-use App\Core\View;
+use App\Exceptions\EntityNotFoundException;
+use App\Exceptions\InvalidArgumentException;
 use App\Services\UserService;
-use Exception;
 
 class UserController extends Controller {
 
@@ -17,10 +17,12 @@ class UserController extends Controller {
             $res = $service->findById($id);
             return $this->json($res, 200);
 
-        } catch (Exception $e) {
-
+        } catch (EntityNotFoundException $e) {
             return (new Response())->setStatusCode(404)
-                ->setContent(View::render('error.404'));
+                ->json(['error' => $e->getMessage()], 404);
+        } catch (InvalidArgumentException $e) {
+            return (new Response())->setStatusCode(400)
+                ->json(['error' => $e->getMessage()], 400);
         }
     }
 }
