@@ -39,7 +39,11 @@ class Router {
         [$controller, $method] = $action;
         $controller = new $controller;
 
-        $response = $controller->$method($request);
+        try {
+            $response = $controller->$method($request);
+        } catch(Exception $e) {
+            $response = ExceptionHandler::handle($e);
+        }
 
         if ($response instanceof Response) {
             $response->send();
@@ -73,10 +77,14 @@ class Router {
             throw new Exception("Cannot resolve parameter {$paramName}");
         }
 
-        $response = $reflection->invokeArgs(
-            $controller, 
-            $args
-        );
+        try {
+            $response = $reflection->invokeArgs(
+                $controller, 
+                $args
+            );
+        } catch(Exception $e) {
+            $response = ExceptionHandler::handle($e);
+        }
 
         if ($response instanceof Response) {
             $response->send();

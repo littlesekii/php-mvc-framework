@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
+use Exception;
 
 class MainController extends Controller {
 
@@ -21,6 +22,10 @@ class MainController extends Controller {
 
     public function ping(): Response {
         return (new Response())->setContent('Pong 🏓');
+    }
+
+    public function exception(): Response {
+        throw new Exception();
     }
 
     public function user(int $id): Response {

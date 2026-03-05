@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class InvalidArgumentException extends \Exception {}
+use App\Core\Exceptions\ValidationException;
+
+class InvalidArgumentException extends ValidationException {}
