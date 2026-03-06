@@ -37,7 +37,9 @@ class Router {
 
     private function resolveStaticRoute(Request $request, array $action): void {
         [$controller, $method] = $action;
-        $controller = new $controller;
+
+        $container = new Container();
+        $controller = $container->make($controller);
 
         try {
             $response = $controller->$method($request);
@@ -52,7 +54,9 @@ class Router {
 
     private function resolveDynamicRoute(Request $request, array $action, array $params): void {
         [$controller, $method] = $action;
-        $controller = new $controller;
+        
+        $container = new Container();
+        $controller = $container->make($controller);
 
         $reflection = new ReflectionMethod($controller, $method);
         $args = [];

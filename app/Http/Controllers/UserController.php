@@ -8,10 +8,14 @@ use App\Services\UserService;
 
 class UserController extends Controller {
 
-    public function user(int $id) : Response {
-        $service = new UserService();
+    private UserService $service;
 
-        $res = $service->findById($id);
+    public function __construct(UserService $service) {
+        $this->service = $service;
+    }
+
+    public function user(int $id) : Response {
+        $res = $this->service->findById($id);
         return $this->json($res, 200);
     }
 }
