@@ -69,6 +69,19 @@ class Router {
             }
 
             $paramName = $param->getName();
+            if ($paramType && $paramType->getName() === 'int') {
+                if (!ctype_digit($params[$paramName])) {
+                    $this->sendNotFound();
+                    return;
+                }
+            }
+            if ($paramType && $paramType->getName() === 'float') {
+                if (!is_numeric($params[$paramName])) {
+                    $this->sendNotFound();
+                    return;
+                }
+            }
+
             if (isset($params[$paramName])) {
                 $args[] = $params[$paramName];
                 continue;
@@ -120,8 +133,12 @@ class Router {
             }    
         }
             
+        $this->sendNotFound();    
+    }
+
+    private function sendNotFound(): void {
         (new Response())->setStatusCode(404)
             ->setContent("404 Not Found")
-            ->send();        
+            ->send();  
     }
 }
