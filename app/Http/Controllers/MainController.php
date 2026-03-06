@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Core\Controller;
+use App\Core\Env;
 use App\Core\Request;
 use App\Core\Response;
 use Exception;
@@ -10,7 +11,7 @@ use Exception;
 class MainController extends Controller {
 
     public function index(): Response {
-        return $this->view('home.index', ['name' => 'PHP MVC Framework']);
+        return $this->view('home.index', ['name' => Env::get('PROJECT_NAME')]);
     }
 
     public function requestInfo(Request $req): Response {

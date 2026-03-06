@@ -1,6 +1,9 @@
 <?php
 
+use App\Core\Env;
 use App\Core\Router;
+
+Env::load(__DIR__.'/../.env');
 
 $router = new Router();
 
