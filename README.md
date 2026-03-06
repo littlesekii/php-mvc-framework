@@ -9,7 +9,13 @@ git clone https://github.com/littlesekii/php-mvc-framework.git
 cd php-mvc-framework
 ```
 
-### 2️⃣ Build and start the containers
+### 2️⃣ Generate PSR-4 composer autoload files
+
+```bash
+composer dump-autoload
+```
+
+### 3️⃣ Build and start the containers
 
 ```bash
 docker compose up -d --build
@@ -20,7 +26,7 @@ This will start:
 - Nginx (web server)
 - PHP 8.3 (FPM)
 
-### 3️⃣ Access the application
+### 4️⃣ Access the application
 
 Open your browser and go to:
 
