@@ -28,4 +28,8 @@ class UserService {
 
         return $user;
     }
+
+    public function save(int $id, string $name): array {
+        return $this->repository->save($id, $name);
+    }
 }

@@ -9,4 +9,5 @@ $router->get("/api/reqinfo", [MainController::class, 'requestInfo']);
 $router->get("/api/exception", [MainController::class, 'exception']);
 $router->get("/api/users/{id}", [MainController::class, 'user']);
 
+$router->post("/users", [UserController::class, 'save']);
 $router->get("/users/{id}", [UserController::class, 'user']);
