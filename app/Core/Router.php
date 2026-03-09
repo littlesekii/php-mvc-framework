@@ -36,6 +36,29 @@ class Router {
 
     }
 
+    public function post(string $uri, array $action): void {
+        // if there is no curly braces opening its a static route
+        if (strpos($uri, '{') === false) {
+            $this->staticRoutes['POST'][$uri] = $action;
+            return;
+        }
+
+        /* register the dynamic routes */
+
+        preg_match_all('#\{([^}]+)\}#', $uri, $matches);
+        $paramsNames = $matches[1];
+
+        $pattern = preg_replace('#\{([^}]+)\}#', '([^/]+)', $uri);
+        $pattern = "#^{$pattern}$#";
+
+        $this->dynamicRoutes['POST'][] = [
+            'uri' => $uri, 
+            'pattern' => $pattern,
+            'paramNames' => $paramsNames,
+            'action' => $action
+        ];  
+    }
+
     private function resolveStaticRoute(Request $request, array $action): void {
         [$controller, $method] = $action;
 
