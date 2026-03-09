@@ -10,8 +10,9 @@ use Exception;
 class ExceptionHandler {
 
     public static function handle(Exception $e): Response {
-        $response = new Response();
+        Logger::error($e->getMessage());
         
+        $response = new Response();
         switch(true) {
             case $e instanceof ValidationException:
                 return $response->setStatusCode(400)

@@ -13,8 +13,9 @@ class ErrorHandler {
     }
 
     public static function handleException(Throwable $e): void {
-        $isDebug = Env::get('APP_DEBUG', false);
+        Logger::error($e->getMessage());
 
+        $isDebug = Env::get('APP_DEBUG', false);
         if ($isDebug) {
             (new Response())->setStatusCode(500)
                 ->setContent("{$e->getMessage()}<pre>{$e->getTraceAsString()}</pre>")
