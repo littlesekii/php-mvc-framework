@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Http\Middleware\LogRequestMiddleware;
 use Exception;
 use ReflectionMethod;
 
@@ -41,11 +42,17 @@ class Router {
         $container = new Container();
         $controller = $container->make($controller);
 
+        $pipeline = new MiddlewarePipeline();
+        $pipeline->add(LogRequestMiddleware::class);
+
         try {
-            $response = $controller->$method($request);
+            $response = $pipeline->handle($request, function ($request) use ($controller, $method) {
+                return $controller->$method($request);
+            });
         } catch(Exception $e) {
             $response = ExceptionHandler::handle($e);
         }
+
 
         if ($response instanceof Response) {
             $response->send();
@@ -94,11 +101,16 @@ class Router {
             throw new Exception("Cannot resolve parameter {$paramName}");
         }
 
+        $pipeline = new MiddlewarePipeline();
+        $pipeline->add(LogRequestMiddleware::class);
+
         try {
-            $response = $reflection->invokeArgs(
-                $controller, 
-                $args
-            );
+            $response = $pipeline->handle($request, function ($request) use ($reflection, $controller, $args) {
+                return $reflection->invokeArgs(
+                    $controller, 
+                    $args
+                );
+            });
         } catch(Exception $e) {
             $response = ExceptionHandler::handle($e);
         }
